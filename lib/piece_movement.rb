@@ -52,7 +52,6 @@ module Piece_movement
 
     def valid_move?(cell, destination)
         piece_move = [destination.x - cell.x, destination.y - cell.y]
-       # binding.pry
         if cell.piece.color  == 'black' && cell.piece.class.name.split("::").last == 'Pawn'
             for move in cell.piece.moveset_black
                 if piece_move == move
@@ -69,7 +68,6 @@ module Piece_movement
             
         else
             for move in cell.piece.moveset
-                #binding.pry
                 if piece_move == move
                     return true
                 end
@@ -78,4 +76,103 @@ module Piece_movement
         return false
     end
 
+    def valid_destination?(cell, destination)
+        if destination.piece == nil
+            return true
+        elsif destination.piece.color != cell.piece.color
+            return true
+        else
+            return false
+        end
+    end
+
+    def number_to_zero(number)
+        array = []
+        number += 1
+        (number...0).each do |n|
+            array << n
+        end
+        return array.reverse
+    end
+
+    def zero_to_number(number)
+        array = []
+        (1...number).each do |n|
+            array << n
+        end
+        return array
+    end
+
+    def zero_maker(number)
+        array =[]
+        number -= 1
+        number.times do
+            array << 0
+        end
+
+        return array
+    end
+
+    def make_array(a, b)
+        if a > 0
+            array = zero_to_number(a)
+        elsif a < 0
+            array = number_to_zero(a)
+        elsif a == 0
+            array = zero_maker(b.abs)
+        elsif a == 0
+            array = zero_maker(b.abs)       
+        else 
+            return false
+    
+        end
+        return array
+    end
+
+    def piece?(cell)
+        if cell.piece != nil
+            return true
+        else
+            false
+        end
+    end
+
+    def no_obstacles?(cell, destination)
+        x = destination.x - cell.x
+        y = destination.y - cell.y
+        x_array = make_array(x, y)
+        y_array = make_array(y, x)
+
+        x = x.abs
+        y = y.abs
+        n = 0
+
+        if x == 0
+            unless n == y_array.length
+                return false if piece?(@board[cell.y + y_array[n]][cell.x + x_array[n]])
+                n +=1
+            end
+        else
+            unless n == x_array.length 
+                return false if piece?(@board[cell.y + y_array[n]][cell.x + x_array[n]])
+                n +=1
+            end
+        end
+        return true
+    end
+
+    def move_piece
+        cell = select_piece()
+        destination = select_destination()
+        
+        if valid_move?(cell, destination) && valid_destination?(cell, destination) && no_obstacles?(cell, destination)
+            destination.piece = cell.piece
+            destination.value = cell.value
+            cell.piece = nil
+            cell.value = ' - '
+            return true
+        else
+            return false
+        end
+    end
 end

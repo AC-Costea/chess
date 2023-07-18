@@ -363,15 +363,234 @@ describe Board do
         end
     end
 
-    
+    describe '#valid_destination?' do
+        subject (:game) {described_class.new}
 
-=begin
-    describe '#move_piece' do
+        context 'when empty square' do
+            before do
+                game.create_board
+                game.set_pieces
+            end
+
+            it 'returns true' do
+                expect(game.valid_destination?(game.board[6][6], game.board[4][6])).to be true
+                expect(game.valid_destination?(game.board[7][6], game.board[5][7])).to be true
+            end
+        end
+
+        context 'when  opposite color' do
+            before do
+                game.create_board
+                game.set_pieces
+            end
+
+            it 'returns true' do
+                expect(game.valid_destination?(game.board[6][6], game.board[1][1])).to be true
+                expect(game.valid_destination?(game.board[7][6], game.board[0][0])).to be true
+            end
+        end
+
+        context 'when  same color' do
+            before do
+                game.create_board
+                game.set_pieces
+            end
+
+            it 'returns false' do
+                expect(game.valid_destination?(game.board[6][6], game.board[6][1])).to be false
+                expect(game.valid_destination?(game.board[7][6], game.board[7][0])).to be false
+            end
+        end
+    end
+
+    describe '#number_to_zero' do
         subject(:game) {described_class.new}
 
         context 'when called' do
 
+            it 'creates an array with elements from x to zero' do
+                expect(game.number_to_zero(-4)).to eq([-1, -2, -3])
+            end
         end
     end
-=end
+
+    describe '#zero_to_number' do
+        subject(:game) {described_class.new}
+
+        context 'when called' do
+
+            it 'creates an array with elements from x to zero' do
+                expect(game.zero_to_number(4)).to eq([1, 2, 3])
+            end
+        end
+    end
+
+    describe '#zero_maker' do
+        subject(:game) {described_class.new}
+
+        context 'when called' do
+
+            it 'creates an array n number of zero' do
+                expect(game.zero_maker(4)).to eq([0, 0, 0])
+            end
+        end
+    end
+
+    describe '#make_array' do
+
+        subject(:game) {described_class.new}
+
+        context 'when n > 0' do
+
+            it 'creates array of numbers from 1 to n-1' do
+                expect(game.make_array(5, 7)).to eq([1, 2, 3, 4])
+            end
+        end
+
+        context 'when n < 0' do
+
+            it 'creates array of numbers from n+1 to -1' do
+                expect(game.make_array(-5, 7)).to eq([-1, -2, -3, -4])
+            end
+        end
+        context 'when n == 0' do
+
+            it 'creates array of n zeros' do
+                expect(game.make_array(0, 7)).to eq([0, 0, 0, 0, 0, 0])
+            end
+        end
+    end
+
+    describe '#piece?' do
+
+        subject(:game) {described_class.new}
+
+        context 'when cell has piece' do
+            before do
+                game.create_board
+                game.set_pieces
+            end
+
+            it 'returns true' do 
+                expect(game.piece?(game.board[7][4])).to eq true
+            end
+        end
+
+        context 'when cell does not have piece' do
+            before do
+                game.create_board
+                game.set_pieces
+            end
+
+            it 'returns true' do 
+                expect(game.piece?(game.board[5][4])).to eq false
+            end
+        end
+    end
+
+    describe '#no_obstacles?' do
+        subject(:game) {described_class.new}
+
+        context 'when no obstacles' do
+            before do
+                game.create_board
+                game.set_pieces
+            end
+
+            it 'returns true' do
+                expect(game.no_obstacles?(game.board[6][6], game.board[4][6])).to be true
+                expect(game.no_obstacles?(game.board[1][1], game.board[2][1])).to be true
+            end
+        end
+
+        context 'when obstacles' do
+            before do
+                game.create_board
+                game.set_pieces
+            end
+
+            it 'returns false' do
+                expect(game.no_obstacles?(game.board[0][0], game.board[4][0])).to be false
+                expect(game.no_obstacles?(game.board[7][5], game.board[5][3])).to be false
+                expect(game.no_obstacles?(game.board[0][2], game.board[4][6])).to be false
+                expect(game.no_obstacles?(game.board[0][3], game.board[4][7])).to be false
+            end
+        end
+
+        context 'when moving one square' do
+            before do
+                game.create_board
+                game.set_pieces
+            end
+
+            it 'returns true' do
+                expect(game.no_obstacles?(game.board[0][0], game.board[1][0])).to be true
+                expect(game.no_obstacles?(game.board[0][4], game.board[1][5])).to be true
+                expect(game.no_obstacles?(game.board[7][5], game.board[6][4])).to be true
+                expect(game.no_obstacles?(game.board[7][5], game.board[6][4])).to be true
+            end
+        end
+
+        context 'when knight moves' do
+            before do
+                game.create_board
+                game.set_pieces
+            end
+
+            it 'returns true regardless of obstacles' do
+                expect(game.no_obstacles?(game.board[0][1], game.board[2][2])).to be true
+            end
+        end
+
+    end
+
+    describe '#move_piece' do
+        subject(:game) {described_class.new}
+
+        context 'when input is valid' do
+            before do
+                game.create_board
+                game.set_pieces
+                allow(game).to receive(:select_piece).and_return(game.board[1][1])
+                allow(game).to receive(:select_destination).and_return(game.board[3][1])
+            end
+
+            it 'replaces the piece of the destination with selected piece' do
+                game.move_piece
+                expect(game.board[3][1].piece.class.name.split("::").last).to eq('Pawn')
+            end
+
+            it 'replaces the value of the destination with selected piece' do
+                game.move_piece
+                expect(game.board[3][1].value).to eq(' ♙ ')
+            end
+
+            it 'changes the previous positions piece to nil' do
+                game.move_piece
+                expect(game.board[1][1].piece).to eq(nil)
+            end
+
+            it "replaces the value of the previous position with '-' " do
+                game.move_piece
+                expect(game.board[1][1].value).to eq(' - ')
+            end
+
+            it "returns true" do
+                expect(game.move_piece).to eq(true)
+            end
+        end
+
+        context 'when input is invalid' do
+            before do
+                game.create_board
+                game.set_pieces
+                allow(game).to receive(:select_piece).and_return(game.board[1][1])
+                allow(game).to receive(:select_destination).and_return(game.board[4][1])
+            end
+
+            it 'returns false' do
+                expect(game.move_piece).to eq(false)
+            end
+        end
+    end
 end
