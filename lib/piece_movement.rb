@@ -21,6 +21,7 @@ module Piece_movement
             puts 'You must introduce a letter, then a number'
             input = gets.chomp
         end
+        return input
     end
 
     def letter_to_number(letter)
@@ -149,12 +150,12 @@ module Piece_movement
 
         if x == 0
             unless n == y_array.length
-                return false if piece?(@board[cell.y + y_array[n]][cell.x + x_array[n]])
+                return false if piece?(@board[7 - (cell.y + y_array[n])][cell.x + x_array[n]])
                 n +=1
             end
         else
             unless n == x_array.length 
-                return false if piece?(@board[cell.y + y_array[n]][cell.x + x_array[n]])
+                return false if piece?(@board[7 - (cell.y + y_array[n])][cell.x + x_array[n]])
                 n +=1
             end
         end
@@ -172,6 +173,7 @@ module Piece_movement
             cell.value = ' - '
             return true
         else
+            puts 'Invalid move !'
             return false
         end
     end

@@ -19,9 +19,11 @@ class Cell
 end
 
 class Board
-    attr_accessor :cell_row, :board
+    attr_accessor :cell_row, :board, :player1, :player2
     def initialize
         @board = []
+        @player1 = 'white'
+        @player2 = 'black'
     end
 
     include Piece_movement
@@ -86,19 +88,14 @@ class Board
     end
 
     def show_board
+        puts '   a  b  c  d  e  f  g  h'
         for row in @board
             array = []
             for cell in row
                 array << cell.value
             end
-            puts "#{8 - @board.index(row)} " + array.join
+            puts "#{8 - @board.index(row)} " + array.join + " #{8 - @board.index(row)}"
         end
         puts '   a  b  c  d  e  f  g  h'
     end
 end
-=begin
-game = Board.new
-game.create_board
-game.set_pieces
-game.show_board
-=end

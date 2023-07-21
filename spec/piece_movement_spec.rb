@@ -591,6 +591,10 @@ describe Board do
             it 'returns false' do
                 expect(game.move_piece).to eq(false)
             end
+
+            it 'outputs error message' do
+                expect { game.move_piece }.to output("Invalid move !\n").to_stdout
+            end
         end
     end
 end
