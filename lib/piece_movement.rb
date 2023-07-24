@@ -2,6 +2,17 @@ require 'pry'
 
 module Piece_movement
 
+    def check_piece(cell, color)
+        if cell.piece == nil
+            return false
+        elsif
+            cell.piece.color != color
+            return false
+        else
+            return true
+        end
+    end
+
     def valid_input?(input)
         if input.length > 2 || input.length < 2
             return false
@@ -36,11 +47,11 @@ module Piece_movement
         return [x, y]
     end
 
-    def select_piece
+    def select_piece(color)
         coord = get_coordinates()
         loop do
-            break if @board[7 - coord[1]][coord[0]].piece != nil
-            puts 'Select a piece'
+            break if check_piece(@board[7 - coord[1]][coord[0]], color)
+            puts "Select a #{color} piece"
             coord = get_coordinates()
         end
         return @board[7 - coord[1]][coord[0]]
@@ -162,8 +173,8 @@ module Piece_movement
         return true
     end
 
-    def move_piece
-        cell = select_piece()
+    def move_piece(color)
+        cell = select_piece(color)
         destination = select_destination()
         
         if valid_move?(cell, destination) && valid_destination?(cell, destination) && no_obstacles?(cell, destination)
@@ -173,7 +184,7 @@ module Piece_movement
             cell.value = ' - '
             return true
         else
-            puts 'Invalid move !'
+            puts 'Invalid move, try again !'
             return false
         end
     end

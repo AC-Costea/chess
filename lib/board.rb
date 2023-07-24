@@ -7,6 +7,7 @@ require_relative './pieces/bishop.rb'
 require_relative './pieces/queen.rb'
 require_relative './pieces/king.rb'
 require_relative 'piece_movement.rb'
+require_relative 'piece_exceptions.rb'
 
 class Cell
     attr_accessor :x, :y, :value, :piece
@@ -27,6 +28,7 @@ class Board
     end
 
     include Piece_movement
+    include Piece_exceptions
 
     def create_board
         (-7..0).each do |y|
@@ -97,5 +99,18 @@ class Board
             puts "#{8 - @board.index(row)} " + array.join + " #{8 - @board.index(row)}"
         end
         puts '   a  b  c  d  e  f  g  h'
+    end
+
+    def round
+        show_board()
+        puts "It's white's turn"
+        loop do
+            break if move_piece('white')
+        end
+        show_board()
+        puts "It's black's turn"
+        loop do
+            break if move_piece('black')
+        end
     end
 end

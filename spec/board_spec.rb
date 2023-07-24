@@ -1,7 +1,7 @@
 require './lib/board.rb'
 require './lib/pieces/pawn.rb'
 require './lib/piece_movement.rb'
-
+require './lib/piece_exceptions.rb'
 
 describe Board do
 

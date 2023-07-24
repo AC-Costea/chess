@@ -121,8 +121,8 @@ describe Board do
             end
 
             it 'outputs an error once' do
-                expect(game).to receive(:puts).with('Select a piece').once 
-                game.select_piece
+                expect(game).to receive(:puts).with("Select a white piece").once 
+                game.select_piece('white')
             end
         end
 
@@ -137,8 +137,8 @@ describe Board do
             end
 
             it 'outputs an error twice' do
-                expect(game).to receive(:puts).with('Select a piece').twice
-                game.select_piece
+                expect(game).to receive(:puts).with("Select a white piece").twice
+                game.select_piece('white')
             end
         end
 
@@ -149,17 +149,17 @@ describe Board do
                 invalid_input1 = [5, 5]
                 invalid_input2 = [4, 3]
                 invalid_input3 = [3, 5]
-                valid_input = [4, 6]
+                valid_input = [4, 0]
                 allow(game).to receive(:get_coordinates).and_return(invalid_input1, invalid_input2, invalid_input3, valid_input)
             end
 
-            it 'outputs an error trice' do
-                expect(game).to receive(:puts).with('Select a piece').thrice
-                game.select_piece
+           it 'outputs an error trice' do
+                expect(game).to receive(:puts).with("Select a white piece").thrice
+                game.select_piece('white')
             end
         end
 
-        context 'when called on a piece' do
+        context 'when called on a correct color piece' do
             before do
                 game.create_board
                 game.set_pieces
@@ -168,11 +168,12 @@ describe Board do
             end
 
             it 'stops the loop and does not display an error message' do 
-                expect(game).not_to receive(:puts).with('Select a piece')
-                game.select_piece
+                expect(game).not_to receive(:puts).with("Select a black piece")
+                game.select_piece('black')
             end
         end
     end
+
 
     describe '#select_destination' do
         subject(:game) {described_class.new}
@@ -556,27 +557,27 @@ describe Board do
             end
 
             it 'replaces the piece of the destination with selected piece' do
-                game.move_piece
+                game.move_piece('black')
                 expect(game.board[3][1].piece.class.name.split("::").last).to eq('Pawn')
             end
 
             it 'replaces the value of the destination with selected piece' do
-                game.move_piece
+                game.move_piece('black')
                 expect(game.board[3][1].value).to eq(' ♙ ')
             end
 
             it 'changes the previous positions piece to nil' do
-                game.move_piece
+                game.move_piece('black')
                 expect(game.board[1][1].piece).to eq(nil)
             end
 
             it "replaces the value of the previous position with '-' " do
-                game.move_piece
+                game.move_piece('black')
                 expect(game.board[1][1].value).to eq(' - ')
             end
 
             it "returns true" do
-                expect(game.move_piece).to eq(true)
+                expect(game.move_piece('black')).to eq(true)
             end
         end
 
@@ -589,12 +590,19 @@ describe Board do
             end
 
             it 'returns false' do
-                expect(game.move_piece).to eq(false)
+                expect(game.move_piece('black')).to eq(false)
             end
 
             it 'outputs error message' do
-                expect { game.move_piece }.to output("Invalid move !\n").to_stdout
+                expect { game.move_piece('black') }.to output("Invalid move, try again !\n").to_stdout
             end
         end
     end
+
+    describe '#round' do
+        subject(:game) {described_class.new}
+
+        
+    end
+
 end
