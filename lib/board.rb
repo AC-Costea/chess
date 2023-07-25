@@ -7,7 +7,6 @@ require_relative './pieces/bishop.rb'
 require_relative './pieces/queen.rb'
 require_relative './pieces/king.rb'
 require_relative 'piece_movement.rb'
-require_relative 'piece_exceptions.rb'
 
 class Cell
     attr_accessor :x, :y, :value, :piece
@@ -28,8 +27,7 @@ class Board
     end
 
     include Piece_movement
-    include Piece_exceptions
-
+   
     def create_board
         (-7..0).each do |y|
             array = []

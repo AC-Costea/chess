@@ -1,7 +1,8 @@
 require 'pry'
-
+require_relative 'piece_exceptions.rb'
 module Piece_movement
 
+    include Piece_exceptions
     def check_piece(cell, color)
         if cell.piece == nil
             return false
@@ -173,19 +174,29 @@ module Piece_movement
         return true
     end
 
+    def piece_swapper(cell, destination)
+        destination.piece = cell.piece
+        destination.value = cell.value
+        cell.piece = nil
+        cell.value = ' - '
+    end
+
     def move_piece(color)
         cell = select_piece(color)
         destination = select_destination()
-        
-        if valid_move?(cell, destination) && valid_destination?(cell, destination) && no_obstacles?(cell, destination)
-            destination.piece = cell.piece
-            destination.value = cell.value
-            cell.piece = nil
-            cell.value = ' - '
-            return true
+
+        if cell.piece.class.name.split("::").last == 'Pawn'
+            if valid_pawn_move?(cell, destination) && valid_destination?(cell, destination) && no_obstacles?(cell, destination)
+                piece_swapper(cell, destination)
+                return true
+            end
         else
-            puts 'Invalid move, try again !'
-            return false
+            if valid_move?(cell, destination) && valid_destination?(cell, destination) && no_obstacles?(cell, destination)
+                piece_swapper(cell, destination)
+                return true
+            end
         end
+        puts 'Invalid move, try again !'
+        return false
     end
 end
