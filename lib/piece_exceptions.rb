@@ -2,6 +2,23 @@ require 'pry'
 
 module Piece_exceptions
 
+    def en_passant?(selected_pawn, attacked_pawn)
+        if attacked_pawn.piece.moves_made > 1 || attacked_pawn.piece.moves_made < 1
+            return false
+        elsif attacked_pawn.piece.round != selected_pawn.piece.round
+            return false
+        elsif attacked_pawn.piece.color == 'black'
+            return false if attacked_pawn.y == 5
+        elsif attacked_pawn.piece.color == 'white'
+            return false if attacked_pawn.y == 2
+        elsif selected_pawn.piece.color == 'black'
+            return false if selected_pawn.y > 3
+        elsif selected_pawn.piece.color == 'white'
+            return false if selected_pawn.y < 4
+        end
+        return true
+    end
+
     def valid_pawn_move?(cell, destination)
         piece_move = [destination.x - cell.x, destination.y - cell.y]
 

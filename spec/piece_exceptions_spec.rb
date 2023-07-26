@@ -64,4 +64,104 @@ describe Board do
             end
         end
     end
+
+    describe '#en_passant?' do
+        subject(:game) {described_class.new}
+        
+        context 'when not traveled at least 3 ranks' do
+            before do
+                game.create_board
+                game.set_pieces
+                game.board[5][1].piece = Pawn.new('black')
+                game.board[5][2].piece = Pawn.new('white')
+                game.board[3][1].piece = Pawn.new('black')
+                game.board[3][2].piece = Pawn.new('white')
+            end
+
+            it 'returns false' do
+                expect(game.en_passant?(game.board[5][2], game.board[5][1])).to be false
+                expect(game.en_passant?(game.board[3][1], game.board[3][2])).to be false
+            end
+        end
+
+        context 'when attacked pawn made two moves' do
+            before do
+                game.create_board
+                game.set_pieces
+                game.board[3][1].piece = Pawn.new('black')
+                game.board[3][2].piece = Pawn.new('white')
+                game.board[3][1].piece.moves_made = 2
+                game.board[5][1].piece = Pawn.new('black')
+                game.board[5][2].piece = Pawn.new('white')
+                game.board[5][2].piece.moves_made = 2
+            end
+
+            it 'returns false' do
+                expect(game.en_passant?(game.board[3][2], game.board[3][1])).to be false
+                expect(game.en_passant?(game.board[5][1], game.board[5][2])).to be false
+            end
+        end
+
+        context 'when attacked pawn is not two squares in front' do
+            before do
+                game.create_board
+                game.set_pieces
+                game.board[2][1].piece = Pawn.new('black')
+                game.board[2][2].piece = Pawn.new('white')
+                game.board[2][1].piece.moves_made = 1
+                game.board[5][1].piece = Pawn.new('black')
+                game.board[5][2].piece = Pawn.new('white')
+                game.board[5][2].piece.moves_made = 1
+            end
+
+            it 'returns false' do
+                expect(game.en_passant?(game.board[2][2], game.board[2][1])).to be false
+                expect(game.en_passant?(game.board[5][1], game.board[5][2])).to be false
+            end
+        end
+
+        context 'when attacked_pawn and selected pawn have different rounds' do
+            before do
+                game.create_board
+                game.set_pieces
+                game.board[3][1].piece = Pawn.new('black')
+                game.board[3][2].piece = Pawn.new('white')
+                game.board[3][1].piece.moves_made = 1
+                game.board[3][1].piece.round = 4
+                game.board[3][2].piece.round = 5
+                game.board[4][1].piece = Pawn.new('black')
+                game.board[4][2].piece = Pawn.new('white')
+                game.board[4][2].piece.moves_made = 1
+                game.board[4][2].piece.round = 4
+                game.board[4][1].piece.round = 5
+            end
+
+            it 'returns false' do
+                expect(game.en_passant?(game.board[3][2], game.board[3][1])).to be false
+                expect(game.en_passant?(game.board[4][1], game.board[4][2])).to be false
+            end
+        end
+
+        context 'when all coditions are met' do
+            before do
+                game.create_board
+                game.set_pieces
+                game.board[3][1].piece = Pawn.new('black')
+                game.board[3][2].piece = Pawn.new('white')
+                game.board[3][1].piece.moves_made = 1
+                game.board[3][1].piece.round = 4
+                game.board[3][2].piece.round = 4
+                game.board[4][1].piece = Pawn.new('black')
+                game.board[4][2].piece = Pawn.new('white')
+                game.board[4][2].piece.moves_made = 1
+                game.board[4][2].piece.round = 5
+                game.board[4][1].piece.round = 5
+            end
+
+            it 'returns true' do
+                expect(game.en_passant?(game.board[3][2], game.board[3][1])).to be true
+                expect(game.en_passant?(game.board[4][1], game.board[4][2])).to be true
+            end
+        end
+    end
 end
