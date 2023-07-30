@@ -597,6 +597,7 @@ describe Board do
                 expect { game.move_piece('black') }.to output("Invalid move, try again !\n").to_stdout
             end
         end
+
     end
 
     describe '#round' do

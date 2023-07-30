@@ -63,6 +63,40 @@ describe Board do
                 expect(game.valid_pawn_move?(game.board[1][2],  game.board[2][1])).to be true
             end
         end
+
+        context 'when en passant white' do
+            before do 
+                game.create_board
+                game.set_pieces
+                game.board[3][1].piece = Pawn.new('black')
+                game.board[3][2].piece = Pawn.new('white')
+                game.board[3][6].piece = Pawn.new('white')
+                game.board[3][7].piece = Pawn.new('black')
+                allow(game).to receive(:en_passant?).and_return(true)
+            end
+
+            it 'returns true' do
+                expect(game.valid_pawn_move?(game.board[3][6], game.board[2][7])).to be true
+                expect(game.valid_pawn_move?(game.board[3][2], game.board[2][1])).to be true
+            end
+        end
+
+        context 'when en passant black' do
+            before do 
+                game.create_board
+                game.set_pieces
+                game.board[4][1].piece = Pawn.new('black')
+                game.board[4][2].piece = Pawn.new('white')
+                game.board[4][7].piece = Pawn.new('black')
+                game.board[4][6].piece = Pawn.new('white')
+                allow(game).to receive(:en_passant?).and_return(true)
+            end
+
+            it 'returns true' do
+                expect(game.valid_pawn_move?(game.board[4][1], game.board[5][2])).to be true
+                expect(game.valid_pawn_move?(game.board[4][7], game.board[5][6])).to be true
+            end
+        end 
     end
 
     describe '#en_passant?' do

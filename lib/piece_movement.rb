@@ -190,6 +190,7 @@ module Piece_movement
                 piece_swapper(cell, destination)
                 return true
             end
+            
         else
             if valid_move?(cell, destination) && valid_destination?(cell, destination) && no_obstacles?(cell, destination)
                 piece_swapper(cell, destination)
