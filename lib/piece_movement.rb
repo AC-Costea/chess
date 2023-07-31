@@ -181,12 +181,14 @@ module Piece_movement
         cell.value = ' - '
     end
 
-    def move_piece(color)
+    def move_piece(color, round)
         cell = select_piece(color)
         destination = select_destination()
 
         if cell.piece.class.name.split("::").last == 'Pawn'
+            cell.piece.round = round 
             if valid_pawn_move?(cell, destination) && valid_destination?(cell, destination) && no_obstacles?(cell, destination)
+                cell.piece.moves_made += 1
                 piece_swapper(cell, destination)
                 return true
             end
@@ -196,6 +198,9 @@ module Piece_movement
                 piece_swapper(cell, destination)
                 return true
             end
+        end
+        if cell.piece.class.name.split("::").last == 'Pawn'
+            cell.piece.round -= 1
         end
         puts 'Invalid move, try again !'
         return false

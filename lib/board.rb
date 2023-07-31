@@ -99,16 +99,28 @@ class Board
         puts '   a  b  c  d  e  f  g  h'
     end
 
-    def round
+    def turn(color, n)
         show_board()
-        puts "It's white's turn"
+        puts "It's #{color}'s turn"
         loop do
-            break if move_piece('white')
+            break if move_piece(color, n + 1)
         end
-        show_board()
-        puts "It's black's turn"
-        loop do
-            break if move_piece('black')
+    end
+
+    def play
+        create_board()
+        set_pieces()
+        n1 = 0
+        n2 = 0
+        (1..50).each do |n|
+            n1 = n * 2 - 1
+            n2 = n * 2
+            turn('white', n1)
+            turn('black', n2)
         end
     end
 end
+
+#game = Board.new
+#game.play
+

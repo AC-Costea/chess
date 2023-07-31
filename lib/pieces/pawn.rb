@@ -7,7 +7,7 @@ class Pawn
         @moveset_white_attack = [[1, 1], [-1, 1]]
         @moveset_black_attack = [[1, -1], [-1, -1]]
         @ranks_traveled = 0
-        @round = nil
+        @round = 0
         @moves_made = 0
     end
 end

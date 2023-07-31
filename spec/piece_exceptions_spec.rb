@@ -162,12 +162,12 @@ describe Board do
                 game.board[3][2].piece = Pawn.new('white')
                 game.board[3][1].piece.moves_made = 1
                 game.board[3][1].piece.round = 4
-                game.board[3][2].piece.round = 5
+                game.board[3][2].piece.round = 4
                 game.board[4][1].piece = Pawn.new('black')
                 game.board[4][2].piece = Pawn.new('white')
                 game.board[4][2].piece.moves_made = 1
                 game.board[4][2].piece.round = 4
-                game.board[4][1].piece.round = 5
+                game.board[4][1].piece.round = 4
             end
 
             it 'returns false' do
@@ -183,18 +183,25 @@ describe Board do
                 game.board[3][1].piece = Pawn.new('black')
                 game.board[3][2].piece = Pawn.new('white')
                 game.board[3][1].piece.moves_made = 1
-                game.board[3][1].piece.round = 4
-                game.board[3][2].piece.round = 4
+                game.board[3][1].piece.round = 6
+                game.board[3][2].piece.round = 7
                 game.board[4][1].piece = Pawn.new('black')
                 game.board[4][2].piece = Pawn.new('white')
                 game.board[4][2].piece.moves_made = 1
                 game.board[4][2].piece.round = 5
-                game.board[4][1].piece.round = 5
+                game.board[4][1].piece.round = 6
             end
 
             it 'returns true' do
                 expect(game.en_passant?(game.board[3][2], game.board[3][1])).to be true
                 expect(game.en_passant?(game.board[4][1], game.board[4][2])).to be true
+            end
+
+            it 'removes the attacked pawn from the board' do
+                game.en_passant?(game.board[3][2], game.board[3][1])
+                expect(game.board[3][1].piece).to eq(nil)
+                game.en_passant?(game.board[4][1], game.board[4][2])
+                expect(game.board[4][2].piece).to eq(nil)
             end
         end
     end

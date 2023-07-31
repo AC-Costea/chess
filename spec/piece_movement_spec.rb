@@ -557,27 +557,27 @@ describe Board do
             end
 
             it 'replaces the piece of the destination with selected piece' do
-                game.move_piece('black')
+                game.move_piece('black', 1)
                 expect(game.board[3][1].piece.class.name.split("::").last).to eq('Pawn')
             end
 
             it 'replaces the value of the destination with selected piece' do
-                game.move_piece('black')
+                game.move_piece('black', 1)
                 expect(game.board[3][1].value).to eq(' ♙ ')
             end
 
             it 'changes the previous positions piece to nil' do
-                game.move_piece('black')
+                game.move_piece('black', 1)
                 expect(game.board[1][1].piece).to eq(nil)
             end
 
             it "replaces the value of the previous position with '-' " do
-                game.move_piece('black')
+                game.move_piece('black', 1)
                 expect(game.board[1][1].value).to eq(' - ')
             end
 
             it "returns true" do
-                expect(game.move_piece('black')).to eq(true)
+                expect(game.move_piece('black', 1)).to eq(true)
             end
         end
 
@@ -590,11 +590,11 @@ describe Board do
             end
 
             it 'returns false' do
-                expect(game.move_piece('black')).to eq(false)
+                expect(game.move_piece('black', 1)).to eq(false)
             end
 
             it 'outputs error message' do
-                expect { game.move_piece('black') }.to output("Invalid move, try again !\n").to_stdout
+                expect { game.move_piece('black', 1) }.to output("Invalid move, try again !\n").to_stdout
             end
         end
 

@@ -5,7 +5,7 @@ module Piece_exceptions
     def en_passant?(selected_pawn, attacked_pawn)
         if attacked_pawn.piece.moves_made > 1 || attacked_pawn.piece.moves_made < 1
             return false
-        elsif attacked_pawn.piece.round != selected_pawn.piece.round
+        elsif selected_pawn.piece.round != attacked_pawn.piece.round + 1
             return false
         elsif attacked_pawn.piece.color == 'black'
             return false if attacked_pawn.y == 5
@@ -16,6 +16,8 @@ module Piece_exceptions
         elsif selected_pawn.piece.color == 'white'
             return false if selected_pawn.y < 4
         end
+        attacked_pawn.piece = nil
+        attacked_pawn.value = ' - '
         return true
     end
 
@@ -41,4 +43,6 @@ module Piece_exceptions
         end
         return false
     end
+
+    #pawn promotion
 end
