@@ -598,6 +598,40 @@ describe Board do
             end
         end
 
+        context 'when a white pawn reaches the end' do
+            before do
+                game.create_board
+                game.set_pieces
+                game.board[1][1].piece = Pawn.new('white')
+                game.board[0][1].piece = nil
+                allow(game).to receive(:select_piece).and_return(game.board[1][1])
+                allow(game).to receive(:select_destination).and_return(game.board[0][1])
+                allow(game).to receive(:gets).and_return('queen')
+            end
+
+            it 'can be promoted' do
+                game.move_piece('white', 1)
+                expect(game.board[0][1].value).to eq(' ♛ ')
+            end 
+        end
+
+        context 'when a black pawn reaches the end' do
+            before do
+                game.create_board
+                game.set_pieces
+                game.board[6][1].piece = Pawn.new('black')
+                game.board[7][1].piece = nil
+                allow(game).to receive(:select_piece).and_return(game.board[6][1])
+                allow(game).to receive(:select_destination).and_return(game.board[7][1])
+                allow(game).to receive(:gets).and_return('rook')
+            end
+
+            it 'can be promoted' do
+                game.move_piece('black', 1)
+                expect(game.board[7][1].value).to eq(' ♖ ')
+            end 
+        end
+
     end
 
     describe '#round' do

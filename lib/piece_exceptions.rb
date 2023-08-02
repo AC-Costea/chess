@@ -44,5 +44,41 @@ module Piece_exceptions
         return false
     end
 
-    #pawn promotion
+    def promote_pawn(cell)
+        available_pieces = ['knight', 'bishop', 'queen', 'rook']
+        input = gets.chomp.downcase
+        until available_pieces.include?(input)
+            puts 'You can only promote to a rook, a bishop, a knight or a queen'
+            input = gets.chomp.downcase
+        end
+        if cell.y == 0
+            if input == 'knight'
+                cell.piece = Knight.new('black')
+                cell.value = ' ♘ '
+            elsif input == 'bishop'
+                cell.piece = Bishop.new('black')
+                cell.value = ' ♗ '
+            elsif input == 'rook'
+                cell.piece = Rook.new('black')
+                cell.value = ' ♖ '
+            elsif input == 'queen'
+                cell.piece = Queen.new('black')
+                cell.value = ' ♕ '
+            end
+        elsif cell.y == 7
+            if input == 'knight'
+                cell.piece = Knight.new('white')
+                cell.value = ' ♞ '
+            elsif input == 'bishop'
+                cell.piece = Bishop.new('white')
+                cell.value = ' ♝ '
+            elsif input == 'rook'
+                cell.piece = Rook.new('white')
+                cell.value = ' ♜ '
+            elsif input == 'queen'
+                cell.piece = Queen.new('white')
+                cell.value = ' ♛ '
+            end
+        end
+    end
 end

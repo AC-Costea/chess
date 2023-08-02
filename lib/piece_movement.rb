@@ -186,10 +186,11 @@ module Piece_movement
         destination = select_destination()
 
         if cell.piece.class.name.split("::").last == 'Pawn'
-            cell.piece.round = round 
+            cell.piece.round = round
             if valid_pawn_move?(cell, destination) && valid_destination?(cell, destination) && no_obstacles?(cell, destination)
                 cell.piece.moves_made += 1
                 piece_swapper(cell, destination)
+                promote_pawn(destination) if destination.y == 0 || destination.y == 7
                 return true
             end
             

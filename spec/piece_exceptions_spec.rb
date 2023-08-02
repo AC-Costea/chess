@@ -205,4 +205,123 @@ describe Board do
             end
         end
     end
+
+    describe '#promote_pawn' do
+        subject(:game) {described_class.new}
+
+        context 'when black pawn reaches the end' do
+            before do
+                game.create_board
+                game.set_pieces
+                game.board[7][1].piece = Pawn.new('black')
+            end
+
+            it 'can be promoted to knight' do
+                allow(game).to receive(:gets).and_return('knight')
+                game.promote_pawn(game.board[7][1])
+                expect(game.board[7][1].value).to eq(' ♘ ')
+            end
+
+            it 'can be promoted to bishop' do
+                allow(game).to receive(:gets).and_return('bishop')
+                game.promote_pawn(game.board[7][1])
+                expect(game.board[7][1].value).to eq(' ♗ ')
+            end
+
+            it 'can be promoted to rook' do
+                allow(game).to receive(:gets).and_return('rook')
+                game.promote_pawn(game.board[7][1])
+                expect(game.board[7][1].value).to eq(' ♖ ')
+            end
+
+            it 'can be promoted to queen' do
+                allow(game).to receive(:gets).and_return('queen')
+                game.promote_pawn(game.board[7][1])
+                expect(game.board[7][1].value).to eq(' ♕ ')
+            end
+        end
+
+        context 'when white pawn reaches the end' do
+            before do
+                game.create_board
+                game.set_pieces
+                game.board[0][1].piece = Pawn.new('white')
+            end
+
+            it 'can be promoted to knight' do
+                allow(game).to receive(:gets).and_return('knight')
+                game.promote_pawn(game.board[0][1])
+                expect(game.board[0][1].value).to eq(' ♞ ')
+            end
+
+            it 'can be promoted to bishop' do
+                allow(game).to receive(:gets).and_return('bishop')
+                game.promote_pawn(game.board[0][1])
+                expect(game.board[0][1].value).to eq(' ♝ ')
+            end
+
+            it 'can be promoted to rook' do
+                allow(game).to receive(:gets).and_return('rook')
+                game.promote_pawn(game.board[0][1])
+                expect(game.board[0][1].value).to eq(' ♜ ')
+            end
+
+            it 'can be promoted to queen' do
+                allow(game).to receive(:gets).and_return('queen')
+                game.promote_pawn(game.board[0][1])
+                expect(game.board[0][1].value).to eq(' ♛ ')
+            end
+        end
+
+        context 'when wrong input once the valid input' do
+            before do
+                game.create_board
+                game.set_pieces
+                game.board[0][1].piece = Pawn.new('white')
+                invalid_input = 'pawn'
+                valid_input = 'rook'
+                allow(game).to receive(:gets).and_return(invalid_input, valid_input)
+            end
+
+            it 'outputs error once' do
+                expect(game).to receive(:puts).with('You can only promote to a rook, a bishop, a knight or a queen').once
+                game.promote_pawn(game.board[0][1])
+            end
+        end
+
+        context 'when wrong input twice the valid input' do
+            before do
+                game.create_board
+                game.set_pieces
+                game.board[0][1].piece = Pawn.new('white')
+                invalid_input1 = 'pawn'
+                invalid_input2 = 'king'
+                valid_input = 'rook'
+                allow(game).to receive(:gets).and_return(invalid_input1, invalid_input2 , valid_input)
+            end
+
+            it 'outputs error once' do
+                expect(game).to receive(:puts).with('You can only promote to a rook, a bishop, a knight or a queen').twice
+                game.promote_pawn(game.board[0][1])
+            end
+        end
+
+        context 'when wrong input thrice the valid input' do
+            before do
+                game.create_board
+                game.set_pieces
+                game.board[0][1].piece = Pawn.new('white')
+                invalid_input1 = 'pawn'
+                invalid_input2 = 'king'
+                invalid_input3 = 'cvdfvfd'
+                valid_input = 'rook'
+                allow(game).to receive(:gets).and_return(invalid_input1, invalid_input2, invalid_input3, valid_input)
+            end
+
+            it 'outputs error once' do
+                expect(game).to receive(:puts).with('You can only promote to a rook, a bishop, a knight or a queen').thrice
+                game.promote_pawn(game.board[0][1])
+            end
+        end
+    end
 end
