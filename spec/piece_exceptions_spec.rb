@@ -323,5 +323,20 @@ describe Board do
                 game.promote_pawn(game.board[0][1])
             end
         end
+
+        context 'when valid input' do
+            before do
+                game.create_board
+                game.set_pieces
+                game.board[0][1].piece = Pawn.new('white')
+                valid_input = 'bishop'
+                allow(game).to receive(:gets).and_return(valid_input)
+            end
+
+            it 'does not output error' do
+                expect(game).not_to receive(:puts).with('You can only promote to a rook, a bishop, a knight or a queen')
+                game.promote_pawn(game.board[0][1])
+            end
+        end
     end
 end

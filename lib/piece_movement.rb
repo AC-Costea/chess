@@ -159,14 +159,14 @@ module Piece_movement
         x = x.abs
         y = y.abs
         n = 0
-
+       
         if x == 0
-            unless n == y_array.length
+            until n == y_array.length
                 return false if piece?(@board[7 - (cell.y + y_array[n])][cell.x + x_array[n]])
                 n +=1
             end
         else
-            unless n == x_array.length 
+            until n == x_array.length
                 return false if piece?(@board[7 - (cell.y + y_array[n])][cell.x + x_array[n]])
                 n +=1
             end
@@ -179,6 +179,47 @@ module Piece_movement
         destination.value = cell.value
         cell.piece = nil
         cell.value = ' - '
+    end
+
+    def check_board_pieces
+        @white_pieces = []
+        @black_pieces = []
+        for cell in @board.flatten
+            if cell.piece != nil && cell.piece.color == 'white'
+                @white_pieces << cell
+            elsif cell.piece != nil && cell.piece.color == 'black'
+                @black_pieces << cell
+            end
+        end
+    end
+
+    def is_check?(king)
+        if king.piece.color == 'white'
+            for cell in @black_pieces
+                if cell.piece.class.name.split("::").last == 'Pawn'
+                    if no_obstacles?(@board[7 - cell.y][cell.x], @board[7 - king.y][king.x]) && valid_pawn_move?(@board[7 - cell.y][cell.x], @board[7 - king.y][king.x]) && valid_destination?(@board[7 - cell.y][cell.x], @board[7 - king.y][king.x])
+                        return true
+                    end
+                else
+                    if no_obstacles?(@board[7 - cell.y][cell.x], @board[7 - king.y][king.x]) && valid_move?(@board[7 - cell.y][cell.x], @board[7 - king.y][king.x]) && valid_destination?(@board[7 - cell.y][cell.x], @board[7 - king.y][king.x])
+                        return true
+                    end
+                end
+            end
+        elsif king.piece.color == 'black'
+            for cell in @white_pieces
+                if cell.piece.class.name.split("::").last == 'Pawn'
+                    if no_obstacles?(@board[7 - cell.y][cell.x], @board[7 - king.y][king.x]) && valid_pawn_move?(@board[7 - cell.y][cell.x], @board[7 - king.y][king.x]) && valid_destination?(@board[7 - cell.y][cell.x], @board[7 - king.y][king.x])
+                        return true
+                    end
+                else
+                    if no_obstacles?(@board[7 - cell.y][cell.x], @board[7 - king.y][king.x]) && valid_move?(@board[7 - cell.y][cell.x], @board[7 - king.y][king.x]) && valid_destination?(@board[7 - cell.y][cell.x], @board[7 - king.y][king.x])
+                        return true
+                    end
+                end
+            end
+        end
+        return false
     end
 
     def move_piece(color, round)

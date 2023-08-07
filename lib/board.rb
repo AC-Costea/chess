@@ -19,11 +19,13 @@ class Cell
 end
 
 class Board
-    attr_accessor :cell_row, :board, :player1, :player2
+    attr_accessor :cell_row, :board, :player1, :player2, :white_pieces, :black_pieces
     def initialize
         @board = []
         @player1 = 'white'
         @player2 = 'black'
+        @white_pieces = []
+        @black_pieces = []
     end
 
     include Piece_movement

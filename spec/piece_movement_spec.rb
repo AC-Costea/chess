@@ -543,6 +543,19 @@ describe Board do
             end
         end
 
+        context 'when rook alone on board' do
+            before do
+                game.create_board
+                game.board[2][6].piece = Rook.new('white')
+                game.board[2][4].piece = Bishop.new('white')
+
+            end
+
+            xit 'returns true' do
+                expect(game.no_obstacles?(game.board[2][4], game.board[2][6])).to be true
+            end
+        end
+
     end
 
     describe '#move_piece' do
@@ -634,10 +647,170 @@ describe Board do
 
     end
 
-    describe '#round' do
+    describe '#check_board_pieces' do
         subject(:game) {described_class.new}
 
-        
+        context 'when board is first initialized' do
+            before do
+                game.create_board
+                game.set_pieces
+            end
+
+            it 'adds 16 pieces in each array' do
+                game.check_board_pieces
+                expect(game.white_pieces.length).to eq(16)
+                expect(game.black_pieces.length).to eq(16)
+            end
+        end
+
+        context 'when 2 white pieces are taken' do
+            before do
+                game.create_board
+                game.set_pieces
+                game.board[7][1].piece = nil
+                game.board[7][2].piece = nil
+            end
+
+            it 'adds 14 pieces in each array' do
+                game.check_board_pieces
+                expect(game.white_pieces.length).to eq(14)
+            end
+        end
     end
 
+    describe '#is_check?' do
+        subject(:game) {described_class.new}
+
+        context 'when a king is in check by a rook' do
+            before do 
+                game.create_board
+                game.board[0][0].value = ' ♖ '
+                game.board[0][0].piece = Rook.new('black')
+                game.board[0][4].value = ' ♚ '
+                game.board[0][4].piece = King.new('white')
+                game.check_board_pieces
+            end
+
+            it 'returns true' do
+                expect(game.is_check?(game.board[0][4])).to be true
+            end
+
+        end
+
+        context 'when a king is not in check by a rook' do
+            before do 
+                game.create_board
+                game.board[0][2].value = ' ♗ '
+                game.board[0][2].piece = Bishop.new('black')
+                game.board[0][0].value = ' ♖ '
+                game.board[0][0].piece = Rook.new('black')
+                game.board[0][4].value = ' ♚ '
+                game.board[0][4].piece = King.new('white')
+
+                game.check_board_pieces
+            end
+
+            it 'returns true' do
+                expect(game.is_check?(game.board[0][4])).to be false
+            end
+        end
+
+        context 'when a king is in check by a queen' do
+            before do 
+                game.create_board
+                game.board[0][0].value = ' ♕ '
+                game.board[0][0].piece = Queen.new('black')
+                game.board[4][4].value = ' ♚ '
+                game.board[4][4].piece = King.new('white')
+                game.check_board_pieces
+            end
+
+            it 'returns true' do
+                expect(game.is_check?(game.board[4][4])).to be true
+            end
+        end
+
+        context 'when a king is in check by a pawn' do
+            before do 
+                game.create_board
+                game.board[1][1].value = ' ♙ '
+                game.board[1][1].piece = Pawn.new('black')
+                game.board[2][2].value = ' ♚ '
+                game.board[2][2].piece = King.new('white')
+                game.check_board_pieces
+            end
+
+            it 'returns true' do
+                expect(game.is_check?(game.board[2][2])).to be true
+            end
+        end
+
+        context 'when a black king is in check' do
+            before do 
+                game.create_board
+                game.board[1][1].value = ' ♔ '
+                game.board[1][1].piece = King.new('black')
+                game.board[1][4].value = ' ♞ '
+                game.board[1][4].piece = Knight.new('white')
+                game.board[2][2].value = ' ♝ '
+                game.board[2][2].piece = Bishop.new('white')
+                game.check_board_pieces
+            end
+
+            it 'returns true' do
+                expect(game.is_check?(game.board[1][1])).to be true
+            end
+        end
+
+        context 'when a black king is in check by knight' do
+            before do 
+                game.create_board
+                game.board[1][1].value = ' ♔ '
+                game.board[1][1].piece = King.new('black')
+                game.board[3][2].value = ' ♞ '
+                game.board[3][2].piece = Knight.new('white')
+                game.check_board_pieces
+            end
+
+            it 'returns true' do
+                expect(game.is_check?(game.board[1][1])).to be true
+            end
+        end
+
+        context 'when a black king is not in check (rook blocked by pawn)' do
+            before do 
+                game.create_board
+                game.board[1][1].value = ' ♔ '
+                game.board[1][1].piece = King.new('black')
+                game.board[1][2].value = ' ♙ '
+                game.board[1][2].piece = Pawn.new('black')
+                game.board[1][4].value = ' ♜ '
+                game.board[1][4].piece = Rook.new('white')
+                game.board[4][2].value = ' ♞ '
+                game.board[4][2].piece = Knight.new('white')
+                game.check_board_pieces
+            end
+
+            it 'returns true' do
+                expect(game.is_check?(game.board[1][1])).to be false
+            end
+        end
+
+        context 'when a black king is not in check (no attacking pieces)' do
+            before do 
+                game.create_board
+                game.board[1][1].value = ' ♔ '
+                game.board[1][1].piece = King.new('black')
+                game.board[1][2].value = ' ♙ '
+                game.board[1][2].piece = Pawn.new('black')
+                game.board[4][2].value = ' ♞ '
+                game.board[4][2].piece = Knight.new('white')
+                game.check_board_pieces
+            end
+
+            it 'returns true' do
+                expect(game.is_check?(game.board[1][1])).to be false
+            end
+        end
+    end
 end
