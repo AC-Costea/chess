@@ -28,8 +28,7 @@ module Piece_movement
 
     def input
         input = gets.chomp
-        loop do
-            break if valid_input?(input)
+        until valid_input?(input)
             puts 'You must introduce a letter, then a number'
             input = gets.chomp
         end
@@ -167,6 +166,7 @@ module Piece_movement
             end
         else
             until n == x_array.length
+                return true if y_array.length < x_array.length
                 return false if piece?(@board[7 - (cell.y + y_array[n])][cell.x + x_array[n]])
                 n +=1
             end
@@ -179,6 +179,15 @@ module Piece_movement
         destination.value = cell.value
         cell.piece = nil
         cell.value = ' - '
+    end
+
+    def unswap_piece(cell, destination)
+        value = cell.value
+        piece = cell.piece
+        cell.piece = destination.piece
+        cell.value = destination.value
+        destination.piece = piece
+        destination.value = value
     end
 
     def check_board_pieces
@@ -194,6 +203,7 @@ module Piece_movement
     end
 
     def is_check?(king)
+        check_board_pieces()
         if king.piece.color == 'white'
             for cell in @black_pieces
                 if cell.piece.class.name.split("::").last == 'Pawn'
@@ -222,6 +232,14 @@ module Piece_movement
         return false
     end
 
+    def find_king(color)
+        for cell in @board.flatten
+            if cell.piece != nil
+                return cell if cell.piece.color == color && cell.piece.class.name.split("::").last == 'King'
+            end
+        end
+    end
+
     def move_piece(color, round)
         cell = select_piece(color)
         destination = select_destination()
@@ -232,12 +250,23 @@ module Piece_movement
                 cell.piece.moves_made += 1
                 piece_swapper(cell, destination)
                 promote_pawn(destination) if destination.y == 0 || destination.y == 7
+                if is_check?(find_king(color))
+                    unswap_piece(cell, destination)
+                    binding.pry
+                    puts 'Your king is in check'
+                    return false
+                end
                 return true
             end
             
         else
             if valid_move?(cell, destination) && valid_destination?(cell, destination) && no_obstacles?(cell, destination)
                 piece_swapper(cell, destination)
+                if is_check?(find_king(color))
+                    unswap_piece(cell, destination)
+                    puts 'Your king is in check'
+                    return false
+                end
                 return true
             end
         end

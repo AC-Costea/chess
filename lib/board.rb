@@ -104,7 +104,7 @@ class Board
     def turn(color, n)
         show_board()
         puts "It's #{color}'s turn"
-        loop do
+        loop do 
             break if move_piece(color, n + 1)
         end
     end
@@ -123,6 +123,6 @@ class Board
     end
 end
 
-#game = Board.new
-#game.play
+game = Board.new
+game.play
 

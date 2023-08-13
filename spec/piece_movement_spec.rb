@@ -551,8 +551,8 @@ describe Board do
 
             end
 
-            xit 'returns true' do
-                expect(game.no_obstacles?(game.board[2][4], game.board[2][6])).to be true
+            it 'returns true' do
+                expect(game.no_obstacles?(game.board[2][6], game.board[2][4])).to be true
             end
         end
 
@@ -688,7 +688,6 @@ describe Board do
                 game.board[0][0].piece = Rook.new('black')
                 game.board[0][4].value = ' ♚ '
                 game.board[0][4].piece = King.new('white')
-                game.check_board_pieces
             end
 
             it 'returns true' do
@@ -706,8 +705,6 @@ describe Board do
                 game.board[0][0].piece = Rook.new('black')
                 game.board[0][4].value = ' ♚ '
                 game.board[0][4].piece = King.new('white')
-
-                game.check_board_pieces
             end
 
             it 'returns true' do
@@ -722,7 +719,6 @@ describe Board do
                 game.board[0][0].piece = Queen.new('black')
                 game.board[4][4].value = ' ♚ '
                 game.board[4][4].piece = King.new('white')
-                game.check_board_pieces
             end
 
             it 'returns true' do
@@ -737,7 +733,6 @@ describe Board do
                 game.board[1][1].piece = Pawn.new('black')
                 game.board[2][2].value = ' ♚ '
                 game.board[2][2].piece = King.new('white')
-                game.check_board_pieces
             end
 
             it 'returns true' do
@@ -754,7 +749,7 @@ describe Board do
                 game.board[1][4].piece = Knight.new('white')
                 game.board[2][2].value = ' ♝ '
                 game.board[2][2].piece = Bishop.new('white')
-                game.check_board_pieces
+                
             end
 
             it 'returns true' do
@@ -769,7 +764,7 @@ describe Board do
                 game.board[1][1].piece = King.new('black')
                 game.board[3][2].value = ' ♞ '
                 game.board[3][2].piece = Knight.new('white')
-                game.check_board_pieces
+                
             end
 
             it 'returns true' do
@@ -788,7 +783,7 @@ describe Board do
                 game.board[1][4].piece = Rook.new('white')
                 game.board[4][2].value = ' ♞ '
                 game.board[4][2].piece = Knight.new('white')
-                game.check_board_pieces
+               
             end
 
             it 'returns true' do
@@ -802,14 +797,37 @@ describe Board do
                 game.board[1][1].value = ' ♔ '
                 game.board[1][1].piece = King.new('black')
                 game.board[1][2].value = ' ♙ '
-                game.board[1][2].piece = Pawn.new('black')
+                game.board[1][5].piece = Rook.new('black')
+                game.board[3][7].piece = Pawn.new('white')
                 game.board[4][2].value = ' ♞ '
                 game.board[4][2].piece = Knight.new('white')
-                game.check_board_pieces
+                
             end
 
-            it 'returns true' do
+            it 'returns false' do
                 expect(game.is_check?(game.board[1][1])).to be false
+            end
+        end
+    end
+
+    describe '#find_king' do
+        subject(:game) {described_class.new}
+
+        context 'when called' do
+            before do
+                game.create_board
+                game.board[1][1].piece = King.new('black')
+                game.board[1][1].value = ' ♔ '
+                game.board[3][4].piece = King.new('white')
+                game.board[3][4].value = ' ♚ '
+            end
+
+            it 'finds the black king' do
+                expect(game.find_king('black')).to eq(game.board[1][1])
+            end
+
+            it 'finds the white king' do
+                expect(game.find_king('white')).to eq(game.board[3][4])
             end
         end
     end
