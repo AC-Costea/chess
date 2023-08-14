@@ -339,4 +339,268 @@ describe Board do
             end
         end
     end
+
+    describe '#castle?' do
+        subject(:game) {described_class.new}
+
+        context 'when white king has made a move (kingside)' do
+            before do
+                game.create_board
+                game.board[7][4].piece = King.new('white')
+                game.board[7][7].piece = Rook.new('white')
+                game.board[7][4].piece.moves_made = 1
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[7][4], 2)).to be false
+            end
+        end
+
+        context 'when rook has made a move (kingside)' do
+            before do
+                game.create_board
+                game.board[7][4].piece = King.new('white')
+                game.board[7][7].piece = Rook.new('white')
+                game.board[7][7].piece.moves_made = 1
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[7][4], 2)).to be false
+            end
+        end
+
+        context 'when there are pieces between the white king and the rook (kingside)' do
+            before do
+                game.create_board
+                game.board[7][4].piece = King.new('white')
+                game.board[7][7].piece = Rook.new('white')
+                game.board[7][5].piece = Bishop.new('white')
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[7][4], 2)).to be false
+            end
+        end
+
+        context 'when the white king is in check (kingside)' do
+            before do
+                game.create_board
+                game.board[7][4].piece = King.new('white')
+                game.board[7][7].piece = Rook.new('white')
+                game.board[5][4].piece = Rook.new('black')
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[7][4], 2)).to be false
+            end
+        end
+
+        context 'when the white king passes through a check (kingside)' do
+            before do
+                game.create_board
+                game.board[7][4].piece = King.new('white')
+                game.board[7][7].piece = Rook.new('white')
+                game.board[5][6].piece = Rook.new('black')
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[7][4], 2)).to be false
+            end
+        end
+
+        context 'when white king has made a move (queenside)' do
+            before do
+                game.create_board
+                game.board[7][4].piece = King.new('white')
+                game.board[7][0].piece = Rook.new('white')
+                game.board[7][4].piece.moves_made = 1
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[7][4], -2)).to be false
+            end
+        end
+
+        context 'when rook has made a move (queenside)' do
+            before do
+                game.create_board
+                game.board[7][4].piece = King.new('white')
+                game.board[7][0].piece = Rook.new('white')
+                game.board[7][0].piece.moves_made = 1
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[7][4], -2)).to be false
+            end
+        end
+
+        context 'when there are pieces between the white king and the rook (queenside)' do
+            before do
+                game.create_board
+                game.board[7][4].piece = King.new('white')
+                game.board[7][0].piece = Rook.new('white')
+                game.board[7][3].piece = Bishop.new('white')
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[7][4], -2)).to be false
+            end
+        end
+
+        context 'when the white king is in check (queenside)' do
+            before do
+                game.create_board
+                game.board[7][4].piece = King.new('white')
+                game.board[7][0].piece = Rook.new('white')
+                game.board[5][4].piece = Rook.new('black')
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[7][4], -2)).to be false
+            end
+        end
+
+        context 'when the white king passes through a check (queenside)' do
+            before do
+                game.create_board
+                game.board[7][4].piece = King.new('white')
+                game.board[7][0].piece = Rook.new('white')
+                game.board[5][2].piece = Rook.new('black')
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[7][4], -2)).to be false
+            end
+        end
+
+        context 'when black king has made a move (kingside)' do
+            before do
+                game.create_board
+                game.board[0][4].piece = King.new('black')
+                game.board[0][7].piece = Rook.new('black')
+                game.board[0][4].piece.moves_made = 1
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[0][4], 2)).to be false
+            end
+        end
+
+        context 'when rook has made a move (kingside)' do
+            before do
+                game.create_board
+                game.board[0][4].piece = King.new('black')
+                game.board[0][7].piece = Rook.new('black')
+                game.board[0][7].piece.moves_made = 1
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[0][4], 2)).to be false
+            end
+        end
+
+        context 'when there are pieces between the black king and the rook (kingside)' do
+            before do
+                game.create_board
+                game.board[0][4].piece = King.new('black')
+                game.board[0][7].piece = Rook.new('black')
+                game.board[0][5].piece = Bishop.new('black')
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[0][4], 2)).to be false
+            end
+        end
+
+        context 'when the black king is in check (kingside)' do
+            before do
+                game.create_board
+                game.board[0][4].piece = King.new('black')
+                game.board[0][7].piece = Rook.new('black')
+                game.board[5][4].piece = Rook.new('white')
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[0][4], 2)).to be false
+            end
+        end
+
+        context 'when the black king passes through a check (kingside)' do
+            before do
+                game.create_board
+                game.board[0][4].piece = King.new('black')
+                game.board[0][7].piece = Rook.new('black')
+                game.board[2][3].piece = Queen.new('white')
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[0][4], 2)).to be false
+            end
+        end
+
+        context 'when black king has made a move (queenside)' do
+            before do
+                game.create_board
+                game.board[0][4].piece = King.new('black')
+                game.board[0][0].piece = Rook.new('black')
+                game.board[0][4].piece.moves_made = 1
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[0][4], -2)).to be false
+            end
+        end
+
+        context 'when rook has made a move (queenside)' do
+            before do
+                game.create_board
+                game.board[0][4].piece = King.new('black')
+                game.board[0][0].piece = Rook.new('black')
+                game.board[0][0].piece.moves_made = 1
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[0][4], -2)).to be false
+            end
+        end
+
+        context 'when there are pieces between the black king and the rook (queenside)' do
+            before do
+                game.create_board
+                game.board[0][4].piece = King.new('black')
+                game.board[0][0].piece = Rook.new('black')
+                game.board[0][3].piece = Bishop.new('black')
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[0][4], -2)).to be false
+            end
+        end
+
+        context 'when the black king is in check (queenside)' do
+            before do
+                game.create_board
+                game.board[0][4].piece = King.new('black')
+                game.board[0][0].piece = Rook.new('black')
+                game.board[2][3].piece = Knight.new('white')
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[0][4], -2)).to be false
+            end
+        end
+
+        context 'when the black king passes through a check (queenside)' do
+            before do
+                game.create_board
+                game.board[0][4].piece = King.new('black')
+                game.board[0][0].piece = Rook.new('black')
+                game.board[5][2].piece = Rook.new('white')
+            end
+
+            it 'returns false' do
+                expect(game.castle?(game.board[0][4], -2)).to be false
+            end
+        end
+    end
 end

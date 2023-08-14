@@ -645,6 +645,102 @@ describe Board do
             end 
         end
 
+        context 'when white king moves two squares to the right' do
+            before do 
+                game.create_board
+                game.board[7][4].piece = King.new('white')
+                game.board[7][7].piece = Rook.new('white')
+                game.board[7][7].value = ' ♜ '
+                game.board[7][4].value = ' ♚ '
+                allow(game).to receive(:select_piece).and_return(game.board[7][4])
+                allow(game).to receive(:select_destination).and_return(game.board[7][6])
+            end
+
+            it 'castles kingside' do
+                game.move_piece('white', 1)
+                expect(game.board[7][6].value).to eq(' ♚ ')
+                expect(game.board[7][5].value).to eq(' ♜ ')
+            end
+            
+            it 'increses moves made by one for king' do
+                game.move_piece('white', 1)
+                expect(game.board[7][6].piece.moves_made).to eq(1)
+            end
+        end
+
+        context 'when white king moves two squares to the left' do
+            before do 
+                game.create_board
+                game.board[7][4].piece = King.new('white')
+                game.board[7][0].piece = Rook.new('white')
+                game.board[7][0].value = ' ♜ '
+                game.board[7][4].value = ' ♚ '
+                allow(game).to receive(:select_piece).and_return(game.board[7][4])
+                allow(game).to receive(:select_destination).and_return(game.board[7][2])
+            end
+
+            it 'castles queenside' do
+                game.move_piece('white', 1)
+                expect(game.board[7][2].value).to eq(' ♚ ')
+                expect(game.board[7][3].value).to eq(' ♜ ')
+            end
+        end
+
+        context 'when black king moves two squares to the right' do
+            before do 
+                game.create_board
+                game.board[0][4].piece = King.new('black')
+                game.board[0][7].piece = Rook.new('black')
+                game.board[0][7].value = ' ♖ '
+                game.board[0][4].value = ' ♔ '
+                allow(game).to receive(:select_piece).and_return(game.board[0][4])
+                allow(game).to receive(:select_destination).and_return(game.board[0][6])
+            end
+
+            it 'castles kingside' do
+                game.move_piece('black', 2)
+                expect(game.board[0][6].value).to eq(' ♔ ')
+                expect(game.board[0][5].value).to eq(' ♖ ')
+            end
+            
+            it 'increses moves made by one for king' do
+                game.move_piece('black', 2)
+                expect(game.board[0][6].piece.moves_made).to eq(1)
+            end
+        end
+
+        context 'when black king moves two squares to the left' do
+            before do 
+                game.create_board
+                game.board[0][4].piece = King.new('black')
+                game.board[0][0].piece = Rook.new('black')
+                game.board[0][0].value = ' ♖ '
+                game.board[0][4].value = ' ♔ '
+                allow(game).to receive(:select_piece).and_return(game.board[0][4])
+                allow(game).to receive(:select_destination).and_return(game.board[0][2])
+            end
+
+            it 'castles queenside' do
+                game.move_piece('black', 2)
+                expect(game.board[0][2].value).to eq(' ♔ ')
+                expect(game.board[0][3].value).to eq(' ♖ ')
+            end
+        end
+
+        context 'when black king tries to castle but is blocked' do
+            before do 
+                game.create_board
+                game.set_pieces
+                allow(game).to receive(:select_piece).and_return(game.board[0][4])
+                allow(game).to receive(:select_destination).and_return(game.board[0][2])
+            end
+
+            it 'castles queenside' do
+                game.move_piece('black', 2)
+                expect(game.board[0][2].value).not_to eq(' ♔ ')
+                expect(game.board[0][3].value).not_to eq(' ♖ ')
+            end
+        end
     end
 
     describe '#check_board_pieces' do

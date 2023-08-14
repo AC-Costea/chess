@@ -123,6 +123,6 @@ class Board
     end
 end
 
-game = Board.new
-game.play
+#game = Board.new
+#game.play
 

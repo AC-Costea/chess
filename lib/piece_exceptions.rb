@@ -81,4 +81,57 @@ module Piece_exceptions
             end
         end
     end
+
+    def castle?(king, direction)
+        if king.piece.color == 'white' 
+            if direction == 2
+                rook = @board[7][7]
+            elsif direction == -2
+                rook = @board[7][0]
+            end
+        elsif king.piece.color == 'black'
+            if direction == 2
+                rook = @board[0][7]
+            elsif direction == -2
+                rook = @board[0][0]
+            end
+        end
+
+        if rook.piece.class.name.split("::").last != 'Rook'
+            return false
+        else
+            if rook.piece.moves_made > 0 || king.piece.moves_made > 0
+                return false
+            end
+
+            if not no_obstacles?(king, rook)
+                return false
+            end
+
+            if is_check?(king)
+                return false
+            end
+            
+            if direction == 2
+                @board[7 - king.y][king.x + direction - 1].piece = King.new(king.piece.color)
+                @board[7 - king.y][king.x + direction].piece = King.new(king.piece.color)
+
+                if is_check?(@board[7 - king.y][king.x + direction - 1]) || is_check?(@board[7 - king.y][king.x + direction])
+                    @board[7 - king.y][king.x + direction - 1].piece = nil
+                    @board[7 - king.y][king.x + direction].piece = nil
+                    return false
+                end
+            else
+                @board[7 - king.y][king.x + direction + 1].piece = King.new(king.piece.color)
+                @board[7 - king.y][king.x + direction].piece = King.new(king.piece.color)
+
+                if is_check?(@board[7 - king.y][king.x + direction + 1]) || is_check?(@board[7 - king.y][king.x + direction])
+                    @board[7 - king.y][king.x + direction + 1].piece = nil
+                    @board[7 - king.y][king.x + direction].piece = nil
+                    return false
+                end
+            end
+        end
+        return true
+    end
 end

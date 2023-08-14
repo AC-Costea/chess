@@ -243,6 +243,7 @@ module Piece_movement
     def move_piece(color, round)
         cell = select_piece(color)
         destination = select_destination()
+        direction = destination.x - cell.x
 
         if cell.piece.class.name.split("::").last == 'Pawn'
             cell.piece.round = round
@@ -258,9 +259,23 @@ module Piece_movement
                 end
                 return true
             end
-            
+
+        elsif cell.piece.class.name.split("::").last == 'King' && (direction == 2 || direction == -2)
+            if castle?(cell, direction)
+                if direction == 2
+                    piece_swapper(@board[7 - cell.y][7], @board[7 - cell.y][cell.x + 1])
+                elsif direction == -2
+                    piece_swapper(@board[7 - cell.y][0], @board[7 - cell.y][cell.x - 1])
+                end
+                cell.piece.moves_made += 1
+                piece_swapper(cell, destination)
+                return true
+            end
         else
             if valid_move?(cell, destination) && valid_destination?(cell, destination) && no_obstacles?(cell, destination)
+                if cell.piece.class.name.split("::").last == 'Rook' || cell.piece.class.name.split("::").last == 'King'
+                    cell.piece.moves_made += 1
+                end
                 piece_swapper(cell, destination)
                 if is_check?(find_king(color))
                     unswap_piece(cell, destination)
