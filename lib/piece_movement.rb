@@ -80,6 +80,7 @@ module Piece_movement
             
         else
             for move in cell.piece.moveset
+                #binding.pry
                 if piece_move == move
                     return true
                 end
@@ -158,7 +159,7 @@ module Piece_movement
         x = x.abs
         y = y.abs
         n = 0
-       
+        #binding.pry
         if x == 0
             until n == y_array.length
                 return false if piece?(@board[7 - (cell.y + y_array[n])][cell.x + x_array[n]])
@@ -166,6 +167,7 @@ module Piece_movement
             end
         else
             until n == x_array.length
+                #binding.pry
                 return true if y_array.length < x_array.length
                 return false if piece?(@board[7 - (cell.y + y_array[n])][cell.x + x_array[n]])
                 n +=1
@@ -181,13 +183,13 @@ module Piece_movement
         cell.value = ' - '
     end
 
-    def unswap_piece(cell, destination)
+    def unswap_piece(cell, destination, destination_piece, destination_value)
         value = cell.value
         piece = cell.piece
         cell.piece = destination.piece
         cell.value = destination.value
-        destination.piece = piece
-        destination.value = value
+        destination.piece = destination_piece
+        destination.value = destination_value
     end
 
     def check_board_pieces
@@ -244,6 +246,8 @@ module Piece_movement
         cell = select_piece(color)
         destination = select_destination()
         direction = destination.x - cell.x
+        destination_value = destination.value
+        destination_piece = destination.piece
 
         if cell.piece.class.name.split("::").last == 'Pawn'
             cell.piece.round = round
@@ -252,8 +256,7 @@ module Piece_movement
                 piece_swapper(cell, destination)
                 promote_pawn(destination) if destination.y == 0 || destination.y == 7
                 if is_check?(find_king(color))
-                    unswap_piece(cell, destination)
-                    binding.pry
+                    unswap_piece(cell, destination, destination_piece, destination_value)
                     puts 'Your king is in check'
                     return false
                 end
@@ -278,7 +281,7 @@ module Piece_movement
                 end
                 piece_swapper(cell, destination)
                 if is_check?(find_king(color))
-                    unswap_piece(cell, destination)
+                    unswap_piece(cell, destination, destination_piece, destination_value)
                     puts 'Your king is in check'
                     return false
                 end

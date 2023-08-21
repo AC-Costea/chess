@@ -7,6 +7,7 @@ require_relative './pieces/bishop.rb'
 require_relative './pieces/queen.rb'
 require_relative './pieces/king.rb'
 require_relative 'piece_movement.rb'
+require_relative 'check_mate.rb'
 
 class Cell
     attr_accessor :x, :y, :value, :piece
@@ -27,7 +28,7 @@ class Board
         @white_pieces = []
         @black_pieces = []
     end
-
+    include Checkmate
     include Piece_movement
    
     def create_board
@@ -103,6 +104,7 @@ class Board
 
     def turn(color, n)
         show_board()
+        return 1 if is_check_mate?(color)
         puts "It's #{color}'s turn"
         loop do 
             break if move_piece(color, n + 1)
@@ -117,8 +119,13 @@ class Board
         (1..50).each do |n|
             n1 = n * 2 - 1
             n2 = n * 2
-            turn('white', n1)
-            turn('black', n2)
+            if turn('white', n1) == 1
+                puts 'Black won!'
+                break
+            elsif turn('black', n2) == 1
+                puts 'White won!'
+                break
+            end
         end
     end
 end
