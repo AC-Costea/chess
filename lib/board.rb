@@ -104,7 +104,8 @@ class Board
 
     def turn(color, n)
         show_board()
-        return 1 if is_check_mate?(color)
+        return 2 if is_stalemate?(color)
+        return 1 if is_checkmate?(color)
         puts "It's #{color}'s turn"
         loop do 
             break if move_piece(color, n + 1)
@@ -119,11 +120,24 @@ class Board
         (1..50).each do |n|
             n1 = n * 2 - 1
             n2 = n * 2
-            if turn('white', n1) == 1
+
+            ending1 = turn('white', n1)
+
+            if ending1 == 1
                 puts 'Black won!'
                 break
-            elsif turn('black', n2) == 1
+            elsif ending1 == 2
+                puts 'Stalemate!'
+                break
+            end
+
+            ending2 = turn('black', n2)
+
+            if ending2 == 1
                 puts 'White won!'
+                break
+            elsif ending2 == 2
+                puts 'Stalemate'
                 break
             end
         end

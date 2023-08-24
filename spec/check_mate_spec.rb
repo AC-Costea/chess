@@ -1,7 +1,7 @@
 require './lib/board.rb'
 
 describe Board do
-    describe '#is_check_mate?' do
+    describe '#is_checkmate?' do
         subject(:game) {described_class.new}
 
         context 'when no checkmate' do
@@ -12,7 +12,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('black')).to be false
+                expect(game.is_checkmate?('black')).to be false
             end
         end
         
@@ -25,7 +25,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('black')).to be true
+                expect(game.is_checkmate?('black')).to be true
             end
         end
 
@@ -38,7 +38,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('white')).to be true
+                expect(game.is_checkmate?('white')).to be true
             end
         end
 
@@ -52,7 +52,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('black')).to be true
+                expect(game.is_checkmate?('black')).to be true
             end
         end
 
@@ -66,7 +66,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('white')).to be true
+                expect(game.is_checkmate?('white')).to be true
             end
         end
 
@@ -80,7 +80,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('black')).to be true
+                expect(game.is_checkmate?('black')).to be true
             end
         end
 
@@ -94,7 +94,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('white')).to be true
+                expect(game.is_checkmate?('white')).to be true
             end
         end
 
@@ -107,7 +107,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('black')).to be true
+                expect(game.is_checkmate?('black')).to be true
             end
         end
 
@@ -120,7 +120,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('white')).to be true
+                expect(game.is_checkmate?('white')).to be true
             end
         end
 
@@ -135,7 +135,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('black')).to be true
+                expect(game.is_checkmate?('black')).to be true
             end
         end
 
@@ -150,7 +150,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('white')).to be true
+                expect(game.is_checkmate?('white')).to be true
             end
         end
 
@@ -163,7 +163,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('black')).to be true
+                expect(game.is_checkmate?('black')).to be true
             end
         end
 
@@ -176,7 +176,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('white')).to be true
+                expect(game.is_checkmate?('white')).to be true
             end
         end
 
@@ -191,7 +191,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('black')).to be true
+                expect(game.is_checkmate?('black')).to be true
             end
         end
 
@@ -206,7 +206,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('white')).to be true
+                expect(game.is_checkmate?('white')).to be true
             end
         end
 
@@ -219,7 +219,7 @@ describe Board do
             end
 
             it 'returns false' do
-                expect(game.is_check_mate?('black')).to be false
+                expect(game.is_checkmate?('black')).to be false
             end
         end
 
@@ -232,7 +232,7 @@ describe Board do
             end
 
             it 'returns false' do
-                expect(game.is_check_mate?('white')).to be false
+                expect(game.is_checkmate?('white')).to be false
             end
         end
 
@@ -247,7 +247,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('black')).to be false
+                expect(game.is_checkmate?('black')).to be false
             end
         end
 
@@ -262,7 +262,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('white')).to be false
+                expect(game.is_checkmate?('white')).to be false
             end
         end
 
@@ -278,7 +278,7 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('black')).to be false
+                expect(game.is_checkmate?('black')).to be false
             end
         end
 
@@ -294,7 +294,171 @@ describe Board do
             end
 
             it 'returns true' do
-                expect(game.is_check_mate?('white')).to be false
+                expect(game.is_checkmate?('white')).to be false
+            end
+        end
+    end
+
+    describe '#is_stalemate?' do
+        subject(:game) {described_class.new}
+
+        context 'when stalemate black (1)' do
+            before do
+                game.create_board
+                game.board[0][2].piece = King.new('white')
+                game.board[7][7].piece = King.new('black')
+                game.board[6][5].piece = Queen.new('white')
+            end
+
+            it 'returns true' do
+                expect(game.is_stalemate?('black')).to be true
+            end
+        end
+
+        context 'when stalemate white (1)' do
+            before do
+                game.create_board
+                game.board[0][0].piece = King.new('white')
+                game.board[1][2].piece = Queen.new('black')
+                game.board[6][5].piece = King.new('white')
+            end
+
+            it 'returns true' do
+                expect(game.is_stalemate?('white')).to be true
+            end
+        end
+
+        context 'when stalemate black (2)' do
+            before do
+                game.create_board
+                game.board[2][5].piece = King.new('white')
+                game.board[0][5].piece = King.new('black')
+                game.board[1][5].piece = Pawn.new('white')
+            end
+
+            it 'returns true' do
+                expect(game.is_stalemate?('black')).to be true
+            end
+        end
+
+        context 'when stalemate white (2)' do
+            before do
+                game.create_board
+                game.board[5][5].piece = King.new('black')
+                game.board[7][5].piece = King.new('white')
+                game.board[6][5].piece = Pawn.new('black')
+            end
+
+            it 'returns true' do
+                expect(game.is_stalemate?('white')).to be true
+            end
+        end
+
+        context 'when stalemate black (3)' do
+            before do
+                game.create_board
+                game.board[2][1].piece = King.new('white')
+                game.board[0][0].piece = King.new('black')
+                game.board[0][1].piece = Bishop.new('black')
+                game.board[0][7].piece = Rook.new('white')
+            end
+
+            it 'returns true' do
+                expect(game.is_stalemate?('black')).to be true
+            end
+        end
+
+        context 'when stalemate white (3)' do
+            before do
+                game.create_board
+                game.board[7][7].piece = King.new('white')
+                game.board[5][6].piece = King.new('black')
+                game.board[7][6].piece = Bishop.new('white')
+                game.board[7][0].piece = Rook.new('black')
+            end
+
+            it 'returns true' do
+                expect(game.is_stalemate?('white')).to be true
+            end
+        end
+
+        context 'when stalemate black (4)' do
+            before do
+                game.create_board
+                game.board[2][1].piece = King.new('white')
+                game.board[7][0].piece = King.new('black')
+                game.board[6][0].piece = Pawn.new('black')
+                game.board[5][1].piece = Queen.new('white')
+            end
+
+            it 'returns true' do
+                expect(game.is_stalemate?('black')).to be true
+            end
+        end
+
+        context 'when stalemate white (4)' do
+            before do
+                game.create_board
+                game.board[0][7].piece = King.new('white')
+                game.board[7][0].piece = King.new('black')
+                game.board[1][7].piece = Pawn.new('white')
+                game.board[2][6].piece = Queen.new('black')
+            end
+
+            it 'returns true' do
+                expect(game.is_stalemate?('white')).to be true
+            end
+        end
+
+        context 'when stalemate black (5)' do
+            before do
+                game.create_board
+                game.board[2][0].piece = King.new('white')
+                game.board[0][0].piece = King.new('black')
+                game.board[1][0].piece = Pawn.new('white')
+                game.board[4][5].piece = Bishop.new('white')
+            end
+
+            it 'returns true' do
+                expect(game.is_stalemate?('black')).to be true
+            end
+        end
+
+        context 'when stalemate white (5)' do
+            before do
+                game.create_board
+                game.board[7][7].piece = King.new('white')
+                game.board[5][7].piece = King.new('black')
+                game.board[6][7].piece = Pawn.new('black')
+                game.board[3][2].piece = Bishop.new('black')
+            end
+
+            it 'returns true' do
+                expect(game.is_stalemate?('white')).to be true
+            end
+        end
+
+        context 'when two kings remain' do
+            before do
+                game.create_board
+                game.board[7][7].piece = King.new('white')
+                game.board[5][7].piece = King.new('black')
+            end
+
+            it 'returns true' do
+                expect(game.is_stalemate?('white')).to be true
+            end
+        end
+
+        context 'when two kings remain' do
+            before do
+                game.create_board
+                game.board[7][7].piece = King.new('white')
+                game.board[5][7].piece = King.new('black')
+            end
+
+            it 'returns true' do
+                expect(game.is_stalemate?('black')).to be true
             end
         end
     end

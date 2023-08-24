@@ -94,5 +94,33 @@ describe Board do
                 expect(game.turn('black', 2)).to eq(1)
             end
         end
+
+        context "when black is stalemate" do
+            before do
+                game.create_board
+                game.board[2][0].piece = King.new('white')
+                game.board[0][0].piece = King.new('black')
+                game.board[1][0].piece = Pawn.new('white')
+                game.board[4][5].piece = Bishop.new('white')
+            end
+
+            it 'returns 2' do
+                expect(game.turn('black', 2)).to eq(2)
+            end
+        end
+
+        context "when white is stalemate" do
+            before do
+                game.create_board
+                game.board[7][7].piece = King.new('white')
+                game.board[5][7].piece = King.new('black')
+                game.board[6][7].piece = Pawn.new('black')
+                game.board[3][2].piece = Bishop.new('black')
+            end
+
+            it 'returns 2' do
+                expect(game.turn('white', 2)).to eq(2)
+            end
+        end
     end
 end
