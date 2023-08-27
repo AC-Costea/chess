@@ -26,8 +26,28 @@ module Piece_movement
         end
     end
 
+    def save_data
+        @list_of_values = []
+        for cell in @board.flatten
+            @list_of_values << cell.value
+        end
+        data = {
+            list_of_values: @list_of_values,
+        }
+        File.open('data.json', 'w') do |file|
+            JSON.dump(data, file)
+        end
+    end
+
+    def use_save_data
+        json_data = File.read('/mnt/c/Users/const/downloads/repos/chess/data.json')
+        save_data = JSON.parse(json_data)
+        @list_of_values = save_data['list_of_values']
+    end
+
     def input
         input = gets.chomp
+        save_data() if input == 'save'
         until valid_input?(input)
             puts 'You must introduce a letter, then a number'
             input = gets.chomp
@@ -80,7 +100,6 @@ module Piece_movement
             
         else
             for move in cell.piece.moveset
-                #binding.pry
                 if piece_move == move
                     return true
                 end
@@ -159,7 +178,7 @@ module Piece_movement
         x = x.abs
         y = y.abs
         n = 0
-        #binding.pry
+
         if x == 0
             until n == y_array.length
                 return false if piece?(@board[7 - (cell.y + y_array[n])][cell.x + x_array[n]])
@@ -167,7 +186,6 @@ module Piece_movement
             end
         else
             until n == x_array.length
-                #binding.pry
                 return true if y_array.length < x_array.length
                 return false if piece?(@board[7 - (cell.y + y_array[n])][cell.x + x_array[n]])
                 n +=1

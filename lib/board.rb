@@ -1,5 +1,5 @@
 require 'pry'
-
+require 'json'
 require_relative './pieces/pawn.rb'
 require_relative './pieces/rook.rb'
 require_relative './pieces/knight.rb'
@@ -27,6 +27,7 @@ class Board
         @player2 = 'black'
         @white_pieces = []
         @black_pieces = []
+        @list_of_values = []
     end
     include Checkmate
     include Piece_movement
@@ -115,6 +116,39 @@ class Board
     def play
         create_board()
         set_pieces()
+
+        if File.exist?('/mnt/c/Users/const/downloads/repos/chess/data.json')
+            puts "If you want to load previous save data, write '1', else write '0'"
+            input = gets.chomp
+            until input == '1' || input == '0'
+                puts 'Write either 1 or 0'
+                input = gets.chomp
+            end
+            if input == '1'
+                use_save_data()
+                n = -1
+                for cell in @board.flatten
+                    cell.value = @list_of_values[n + 1]
+                    n += 1
+                end
+                for cell in @board.flatten
+                    cell.piece = nil if cell.value == ' - '
+                    cell.piece = Pawn.new('white') if cell.value == ' ♟︎ '
+                    cell.piece = Pawn.new('black') if cell.value == ' ♙ '
+                    cell.piece = Rook.new('white') if cell.value == ' ♜ '
+                    cell.piece = Rook.new('black') if cell.value == ' ♖ '
+                    cell.piece = Knight.new('white') if cell.value == ' ♞ '
+                    cell.piece = Knight.new('black') if cell.value == ' ♘ '
+                    cell.piece = Bishop.new('white') if cell.value == ' ♝ '
+                    cell.piece = Knight.new('black') if cell.value == ' ♗ '
+                    cell.piece = Queen.new('white') if cell.value == ' ♛ '
+                    cell.piece = Queen.new('black') if cell.value == ' ♕ '
+                    cell.piece = King.new('white') if cell.value == ' ♚ '
+                    cell.piece = King.new('black') if cell.value == ' ♔ '
+                end
+            end
+        end
+    
         n1 = 0
         n2 = 0
         (1..50).each do |n|
